@@ -1,133 +1,76 @@
-document.getElementById('client-form').addEventListener('submit', addClient);
-document.getElementById('show-clients').addEventListener('click', displayClients);
-document.getElementById('search-button').addEventListener('click', searchClient);
-
 let clients = [];
 
-function addClient(e) {
-    e.preventDefault();
+function addClient() {
+  const name = document.getElementById('name').value;
+  const reference = document.getElementById('reference').value;
+  const phone = document.getElementById('phone').value;
+  const loanAmount = parseFloat(document.getElementById('loanAmount').value);
+  const interestRate = parseFloat(document.getElementById('interestRate').value);
+  const loanDate = document.getElementById('loanDate').value;
+  const paymentDate = document.getElementById('paymentDate').value;
 
-    const name = document.getElementById('name').value;
-    const reference = document.getElementById('reference').value;
-    const phone = document.getElementById('phone').value;
-    const loanValue = parseFloat(document.getElementById('loan-value').value);
-    const interestRate = parseFloat(document.getElementById('interest-rate').value);
-    const loanDate = document.getElementById('loan-date').value;
-    const paymentDate = document.getElementById('payment-date').value;
+  const client = {
+    name,
+    reference,
+    phone,
+    loanAmount,
+    interestRate,
+    loanDate,
+    paymentDate,
+    loans: []
+  };
 
-    const client = {
-        id: Date.now(),
-        name,
-        reference,
-        phone,
-        loans: [
-            {
-                loanValue,
-                interestRate,
-                loanDate,
-                paymentDate,
-                totalValue: loanValue + (loanValue * (interestRate / 100))
-            }
-        ]
-    };
-
-    clients.push(client);
-    document.getElementById('client-form').reset();
-    displayClients();
+  clients.push(client);
+  updateClientList();
 }
 
-function displayClients() {
-    const clientList = document.getElementById('client-list');
-    clientList.innerHTML = '';
+function updateClientList() {
+  const listElement = document.getElementById('clients');
+  listElement.innerHTML = '';
 
-    clients.forEach(client => {
-        const clientDiv = document.createElement('div');
-        clientDiv.className = 'client';
+  clients.forEach(client => {
+    const listItem = document.createElement('li');
 
-        const today = new Date().toISOString().split('T')[0];
-        const isLate = new Date(today) >= new Date(client.loans[0].paymentDate);
+    const clientInfo = document.createElement('div');
+    clientInfo.textContent = `${client.name} - ${client.reference} - ${client.phone}`;
+    listItem.appendChild(clientInfo);
 
-        clientDiv.innerHTML = `
-            <h2 class="${isLate ? 'late' : ''}">${client.name}</h2>
-            <p>Referência: ${client.reference}</p>
-            <p>Telefone: ${client.phone}</p>
-            <button onclick="newLoan(${client.id})">Novo Empréstimo</button>
-        `;
-
-        client.loans.forEach(loan => {
-            const loanDiv = document.createElement('div');
-            loanDiv.className = 'loan';
-            loanDiv.innerHTML = `
-                <p>Valor do Empréstimo: R$ ${loan.loanValue.toFixed(2)}</p>
-                <p>Taxa de Juros: ${loan.interestRate}%</p>
-                <p>Data do Empréstimo: ${loan.loanDate}</p>
-                <p>Data do Pagamento: ${loan.paymentDate}</p>
-                <p>Valor Total (com Juros): R$ ${loan.totalValue.toFixed(2)}</p>
-            `;
-            clientDiv.appendChild(loanDiv);
-        });
-
-        clientList.appendChild(clientDiv);
+    const loanInfo = document.createElement('div');
+    client.loans.forEach(loan => {
+      const loanAmountWithInterest = loan.amount * (1 + loan.interestRate / 100);
+      const loanItem = document.createElement('p');
+      loanItem.textContent = `Empréstimo: ${loan.amount} + Juros: ${loanAmountWithInterest.toFixed(2)} - Data: ${loan.date}`;
+      loanInfo.appendChild(loanItem);
     });
+    listItem.appendChild(loanInfo);
+
+    if (new Date(client.paymentDate) <= new Date()) {
+      listItem.classList.add('red');
+    }
+
+    const newLoanButton = document.createElement('button');
+    newLoanButton.textContent = 'Novo Empréstimo';
+    newLoanButton.onclick = () => addLoan(client);
+    listItem.appendChild(newLoanButton);
+
+    listElement.appendChild(listItem);
+  });
 }
 
-function newLoan(clientId) {
-    const loanValue = parseFloat(prompt('Valor do Empréstimo:'));
-    const interestRate = parseFloat(prompt('Taxa de Juros (%):'));
-    const loanDate = prompt('Data do Empréstimo (aaaa-mm-dd):');
-    const paymentDate = prompt('Data do Pagamento (aaaa-mm-dd):');
+function addLoan(client) {
+  const amount = parseFloat(prompt('Valor do Empréstimo:'));
+  const interestRate = parseFloat(prompt('Taxa de Juros (%):'));
+  const date = prompt('Data do Empréstimo:');
 
-    const client = clients.find(client => client.id === clientId);
-
-    if (client) {
-        const newLoan = {
-            loanValue,
-            interestRate,
-            loanDate,
-            paymentDate,
-            totalValue: loanValue + (loanValue * (interestRate / 100))
-        };
-        client.loans.push(newLoan);
-        displayClients();
-    }
+  client.loans.push({ amount, interestRate, date });
+  updateClientList();
 }
 
 function searchClient() {
-    const searchName = document.getElementById('search-name').value.toLowerCase();
-    const clientList = document.getElementById('client-list');
-    clientList.innerHTML = '';
-
-    const filteredClients = clients.filter(client => client.name.toLowerCase().includes(searchName));
-
-    filteredClients.forEach(client => {
-        const clientDiv = document.createElement('div');
-        clientDiv.className = 'client';
-
-        const today = new Date().toISOString().split('T')[0];
-        const isLate = new Date(today) >= new Date(client.loans[0].paymentDate);
-
-        clientDiv.innerHTML = `
-            <h2 class="${isLate ? 'late' : ''}">${client.name}</h2>
-            <p>Referência: ${client.reference}</p>
-            <p>Telefone: ${client.phone}</p>
-            <button onclick="newLoan(${client.id})">Novo Empréstimo</button>
-        `;
-
-        client.loans.forEach(loan => {
-            const loanDiv = document.createElement('div');
-            loanDiv.className = 'loan';
-            loanDiv.innerHTML = `
-                <p>Valor do Empréstimo: R$ ${loan.loanValue.toFixed(2)}</p>
-                <p>Taxa de Juros: ${loan.interestRate}%</p>
-                <p>Data do Empréstimo: ${loan.loanDate}</p>
-                <p>Data do Pagamento: ${loan.paymentDate}</p>
-                <p>Valor Total (com Juros): R$ ${loan.totalValue.toFixed(2)}</p>
-            `;
-            clientDiv.appendChild(loanDiv);
-        });
-
-        clientList.appendChild(clientDiv);
-    });
+  const query = document.getElementById('searchInput').value.toLowerCase();
+  const filteredClients = clients.filter(client => client.name.toLowerCase().includes(query));
+  clients = filteredClients;
+  updateClientList();
 }
 
 
