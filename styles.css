@@ -1,22 +1,46 @@
+/* styles.css */
 body {
     font-family: Arial, sans-serif;
-  }
-  
-  #clientForm, #clientList {
+    margin: 20px;
+}
+
+h1, h2 {
+    color: #333;
+}
+
+#clientForm, #loanForm {
     margin-bottom: 20px;
-  }
-  
-  input, button {
-    margin: 5px;
-    padding: 5px;
-  }
-  
-  button {
+}
+
+input, select, button {
+    display: block;
+    margin: 10px 0;
+    padding: 10px;
+    width: 100%;
+    max-width: 300px;
+}
+
+button {
+    background-color: #007BFF;
+    color: white;
+    border: none;
     cursor: pointer;
-  }
-  
-  .red {
-    color: red;
-  }
-  
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.client, .loan {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 10px 0;
+}
+
+.loan {
+    background-color: #f9f9f9;
+}
+
+
+
 
