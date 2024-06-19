@@ -1,34 +1,45 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Registro de Clientes e Empréstimos</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lacerdinha Bank</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <h1>Registro de Clientes e Empréstimos</h1>
+    <h1>Cadastro de Clientes e Empréstimos</h1>
 
-  <div id="clientForm">
-    <h2>Cadastrar Cliente</h2>
-    <input type="text" id="name" placeholder="Nome">
-    <input type="text" id="reference" placeholder="Referência">
-    <input type="tel" id="phone" placeholder="Telefone">
-    <input type="number" id="loanAmount" placeholder="Valor do Empréstimo">
-    <input type="number" id="interestRate" placeholder="Taxa de Juros (%)">
-    <input type="date" id="loanDate" placeholder="Data do Empréstimo">
-    <input type="date" id="paymentDate" placeholder="Data do Pagamento">
-    <button onclick="addClient()">Cadastrar</button>
-  </div>
+    <div id="clientForm">
+        <h2>Adicionar Cliente</h2>
+        <input type="text" id="clientName" placeholder="Nome do Cliente">
+        <input type="text" id="clientReference" placeholder="Referência">
+        <button onclick="addClient()">Adicionar Cliente</button>
+    </div>
 
-  <div id="clientList">
-    <h2>Lista de Clientes</h2>
-    <input type="text" id="searchInput" placeholder="Buscar por Nome">
-    <button onclick="searchClient()">Buscar</button>
-    <ul id="clients"></ul>
-  </div>
+    <div id="loanForm">
+        <h2>Adicionar Empréstimo</h2>
+        <select id="clientSelect">
+            <!-- Opções dos clientes serão preenchidas dinamicamente -->
+        </select>
+        <input type="number" id="loanAmount" placeholder="Valor do Empréstimo">
+        <input type="number" id="interestRate" placeholder="Taxa de Juros (%)">
+        <input type="date" id="loanDate" placeholder="Data do Empréstimo">
+        <input type="date" id="paymentDate" placeholder="Data do Pagamento">
+        <button onclick="addLoan()">Adicionar Empréstimo</button>
+    </div>
 
-  <script src="script.js"></script>
+    <h2>Pesquisar Cliente</h2>
+    <input type="text" id="searchClientName" placeholder="Nome do Cliente">
+    <button onclick="searchClient()">Pesquisar</button>
+
+    <div id="clientsContainer">
+        <!-- Clientes e seus empréstimos serão exibidos aqui -->
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
+
+
+
